@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate, Link } from 'react-router-dom';
+import API from '../../services/api';
 
 const view = '/icons/view.png';
 const hide = '/icons/hide.png';
 
 export const LoginForm: React.FC = () => {
 
-  // Added navigate hook
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -20,65 +20,22 @@ export const LoginForm: React.FC = () => {
 
     try {
 
-      const response = await fetch(
-        'http://localhost:8080/api/auth/login',
-        {
-          method: 'POST',
-
-          headers: {
-            'Content-Type': 'application/json'
-          },
-
-          body: JSON.stringify({
-            email,
-            password
-          })
-        }
-      );
-
-      const data = await response.json();
+      const response = await API.post('/auth/login', { email, password });
+      const data = response.data;
 
       console.log("Response Status:", response.status);
       console.log("Response Data:", data);
 
-      // Handle login errors
-      if (!response.ok) {
-
-        if (data.message === 'User not found') {
-          toast.error('Account does not exist. Please signup first.');
-        }
-
-        else if (data.message === 'Invalid password') {
-          toast.error('Incorrect password');
-        }
-
-        else {
-          toast.error(data.message || 'Login failed');
-        }
-
-        return;
-      }
-
-      // Store JWT token
       localStorage.setItem('token', data.token);
-
-      // sore user name
       localStorage.setItem('user', JSON.stringify(data.user));
 
-
-      // Success message
       toast.success('Login successful');
 
-      // Role based redirect
       if (data.user.role === 'admin') {
         navigate('/admin-dashboard', { replace: true });
-      }
-
-      else if (data.user.role === 'shop_owner') {
+      } else if (data.user.role === 'shop_owner') {
         navigate('/shop-dashboard', { replace: true });
-      }
-
-      else {
+      } else {
         navigate('/user-dashboard', { replace: true });
       }
 
@@ -86,8 +43,15 @@ export const LoginForm: React.FC = () => {
 
       console.log(error);
 
-      toast.error('Server error');
+      const message = (error as any)?.response?.data?.message;
 
+      if (message === 'User not found') {
+        toast.error('Account does not exist. Please signup first.');
+      } else if (message === 'Invalid password') {
+        toast.error('Incorrect password');
+      } else {
+        toast.error(message || 'Server error');
+      }
     }
   };
 
@@ -116,13 +80,11 @@ export const LoginForm: React.FC = () => {
         </div>
 
         <div>
-
           <label className="mb-1 block text-sm font-semibold text-gray-700">
             Password
           </label>
 
           <div className="relative">
-
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
@@ -141,26 +103,20 @@ export const LoginForm: React.FC = () => {
               className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-
               <img
                 src={showPassword ? hide : view}
                 alt=""
                 aria-hidden="true"
                 className="h-5 w-5 object-contain opacity-70 hover:opacity-100"
               />
-
             </button>
-
           </div>
-
         </div>
 
         <div className="text-right">
-
           <a href="#" className="text-sm text-gray-600 hover:underline">
             Forgot password?
           </a>
-
         </div>
 
         <button
@@ -173,16 +129,10 @@ export const LoginForm: React.FC = () => {
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-600">
-
         Don&apos;t have an account?{' '}
-
-        <Link
-          to="/signup"
-          className="font-semibold text-[#0052CC] hover:underline"
-        >
+        <Link to="/signup" className="font-semibold text-[#0052CC] hover:underline">
           Signup
         </Link>
-
       </p>
 
     </div>
