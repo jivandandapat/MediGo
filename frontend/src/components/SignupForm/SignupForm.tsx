@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate, Link } from 'react-router-dom';
 
-import view from '../../assets/icons/view.png';
-import hide from '../../assets/icons/hide.png';
+const view = '/icons/view.png';
+const hide = '/icons/hide.png';
 
 export const SignupForm: React.FC = () => {
 

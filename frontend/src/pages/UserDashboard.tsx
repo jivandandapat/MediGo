@@ -14,7 +14,7 @@ import {
   X,
 } from 'lucide-react';
 
-import logo from '../assets/images/logo.png';
+const logo = '/images/logo.png';
 
 // ── Declared OUTSIDE the main component to avoid re-creation on render ──
 interface SidebarContentProps {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import logo from '../../assets/images/logo.png';
-import menuIcon from '../../assets/icons/menu.png';
+const logo = '/images/logo.png';
+const menuIcon = '/icons/menu.png';
 
 export const Navbar: React.FC = () => {
   const { pathname } = useLocation();

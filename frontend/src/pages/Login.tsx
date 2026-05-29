@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/Navbar/Navbar';
 import { LoginForm } from '../components/LoginForm/LoginForm';
 
-import doctorImg from '../assets/images/doctor.png';
-import logo from '../assets/images/logo.png';
+const doctorImg = '/images/doctor.png';
+const logo = '/images/logo.png';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
